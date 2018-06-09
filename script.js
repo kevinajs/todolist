@@ -1,37 +1,23 @@
 var todoList = {
 	todos: [],
-	displayTodos: function() {
-		console.log("My todos: ");
-		if (this.todos.length === 0){
-			console.log("Todo List is Empty!");
-		} else {
-			for (var i = 0; i < this.todos.length; i++){
-				if (this.todos[i].completed === true){
-					console.log("(x)", this.todos[i].todoText);
-				} else {
-					console.log("( )", this.todos[i].todoText);
-				}
-			}
-		}
-	},
 	addTodo: function(todoText) {
 		this.todos.push({
 			todoText: todoText,
 			completed: false
 			});
-		this.displayTodos(this.todos);
+		view.displayTodos();
 	},
 	changeTodo: function(position, todoText) {
 		this.todos[position].todoText = todoText;
-		this.displayTodos(this.todos);
+		view.displayTodos();
 	},
 	deleteTodo: function(position) {
 		this.todos.splice(position, 1);
-		this.displayTodos(this.todos);
+		view.displayTodos();
 	},
 	toggleCompleted: function(position) {
 		this.todos[position].completed = !this.todos[position].completed;
-		this.displayTodos(this.todos);
+		view.displayTodos();
 	},
 	toggleAll: function() {
 		var totalTodos = this.todos.length
@@ -53,18 +39,12 @@ var todoList = {
 				this.todos[i].completed = true;
 			}		
 		}
-		this.displayTodos(this.todos);
+		view.displayTodos();
 	}
 
 };
 
 var handlers = {
-	displayTodos: function() {
-		todoList.displayTodos();
-	},
-	toggleAll: function() {
-		todoList.toggleAll();
-	},
 	addTodo: function() {
 		var addTodoTextInput = document.getElementById('addTodoTextInput');
 		todoList.addTodo(addTodoTextInput.value);
@@ -86,9 +66,33 @@ var handlers = {
 		var toggleCompletedPosition = document.getElementById('toggleCompletedPosition');
 		todoList.toggleCompleted(toggleCompletedPosition.valueAsNumber);
 		toggleCompletedPosition.value = ''
+	},
+		toggleAll: function() {
+		todoList.toggleAll();
 	}
-
 };
+
+var view = {
+	displayTodos: function() {
+		var todosUl = document.querySelector('ul');
+		todosUl.innerHTML = '';
+		for (var i = 0; i < todoList.todos.length; i++) {
+			var todoLi = document.createElement('li');
+			var todoTextWithCompletion = '';
+			var todo = todoList.todos[i];
+
+			if (todo.completed === true) {
+				todoTextWithCompletion = '(x) ' + todo.todoText;
+			} else {
+				todoTextWithCompletion = '( ) ' + todo.todoText;
+			}
+
+			todoLi.textContent = todoTextWithCompletion;
+			todosUl.appendChild(todoLi);
+		}
+	}
+};
+
 
 
 
